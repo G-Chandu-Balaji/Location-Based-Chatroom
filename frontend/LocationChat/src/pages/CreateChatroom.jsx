@@ -4,6 +4,7 @@ import { FiMapPin, FiNavigation } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { getUserLocation } from "../utlis/location";
 import { geocodeCity } from "../utlis/geocodeCity";
+import toast from "react-hot-toast";
 
 function CreateChatroom() {
   const [name, setName] = useState("");
@@ -19,15 +20,16 @@ function CreateChatroom() {
       const loc = await getUserLocation();
       setLocation(loc);
       setLocationSource("gps");
+      toast.success("Location fetched successfully!");
     } catch {
-      alert("Unable to fetch GPS location");
+      toast.error("Unable to fetch GPS location");
     }
   };
 
   // 🏙️ City → lat/lng
   const fetchCityLocation = async () => {
     if (!city.trim()) {
-      alert("Please enter a city name");
+      toast.error("Please enter a city name");
       return;
     }
 
@@ -35,8 +37,9 @@ function CreateChatroom() {
       const loc = await geocodeCity(city);
       setLocation({ lat: loc.lat, lng: loc.lng });
       setLocationSource("city");
+      toast.success("City location set successfully!");
     } catch {
-      alert("City not found ❌");
+      toast.error("City not found ❌");
     }
   };
 
@@ -44,7 +47,7 @@ function CreateChatroom() {
     e.preventDefault();
 
     if (!location) {
-      alert("Please select a location (City or GPS)");
+      toast.error("Please select a location (City or GPS)");
       return;
     }
 
@@ -57,10 +60,10 @@ function CreateChatroom() {
         location,
       });
 
-      alert("Chatroom created successfully ✅");
+      toast.success("Chatroom created successfully ✅");
       window.location.href = "/chatrooms";
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to create chatroom");
+      toast.error(error.response?.data?.message || "Failed to create chatroom");
     } finally {
       setLoading(false);
     }

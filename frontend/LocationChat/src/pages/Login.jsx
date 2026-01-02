@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import { login } from "../api/auth.api";
 import { connectSocket } from "../socket/socket";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -37,7 +38,7 @@ export default function Login() {
 
       // 🔌 Connect socket AFTER login
       connectSocket(res.data.token);
-
+      toast.success("Logged-in successfully");
       navigate("/chatrooms", { replace: true });
     } catch (err) {
       setError(err?.response?.data?.message || "Login failed");

@@ -9,6 +9,7 @@ import { formatTime } from "../utlis/formatTIme";
 function Chat() {
   const currentUser = localStorage.getItem("username");
   const [roomName, setRoomName] = useState("");
+  const [roomLocation, setRoomLocation] = useState(null);
 
   const [chatExpired, setChatExpired] = useState(false);
   const [expiresAt, setExpiresAt] = useState(null);
@@ -37,11 +38,15 @@ function Chat() {
   useEffect(() => {
     socket.emit("joinRoom", { chatroomId });
 
-    socket.on("joinedRoom", ({ chatExpired, expiresAt, roomName }) => {
-      setChatExpired(chatExpired);
-      setExpiresAt(expiresAt);
-      setRoomName(roomName);
-    });
+    socket.on(
+      "joinedRoom",
+      ({ chatExpired, expiresAt, roomName, location }) => {
+        setChatExpired(chatExpired);
+        setExpiresAt(expiresAt);
+        setRoomName(roomName);
+        setRoomLocation(location);
+      }
+    );
 
     socket.on("newMessage", (msg) => {
       setMessages((prev) => [...prev, msg]);
@@ -78,10 +83,10 @@ function Chat() {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-indigo-50 via-white to-emerald-50">
       {/* HEADER */}
-      <div className="flex items-center gap-4 p-4 bg-white shadow">
+      <div className="flex items-center gap-4 p-4 bg-white shadow ">
         <button
           onClick={handleBack}
-          className="p-2 rounded-full hover:bg-gray-100"
+          className="p-2 rounded-full hover:bg-gray-100 ml-8 sm:ml-0"
         >
           <ArrowLeft />
         </button>
@@ -91,6 +96,14 @@ function Chat() {
             {" "}
             {roomName || "Chatroom"}
           </h3>
+
+          {roomLocation && (
+            <p className="text-xs text-gray-500 flex items-center gap-1">
+              📍 {Number(roomLocation.lat).toFixed(4)},{" "}
+              {Number(roomLocation.lng).toFixed(4)}
+            </p>
+          )}
+
           {expiresAt && (
             <p className="text-xs text-gray-500 flex items-center gap-1">
               <Clock className="w-3 h-3" />

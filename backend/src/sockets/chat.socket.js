@@ -38,6 +38,7 @@ export default function chatSocket(io) {
           new Date(chatroom.createdAt).getTime() + CHAT_LIFETIME
         ),
         roomName: chatroom.name,
+        location: chatroom.location,
       });
 
       console.log(chatExpired ? "🚫 Chat disabled" : "🏠 Joined room");

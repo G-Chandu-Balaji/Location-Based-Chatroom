@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { connectSocket } from "../socket/socket";
+import toast from "react-hot-toast";
 
 function OAuthSuccess() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function OAuthSuccess() {
     }
 
     connectSocket(token);
-
+    toast.success("Logged-in successfully");
     navigate("/chatrooms", { replace: true });
   }, [navigate]);
 

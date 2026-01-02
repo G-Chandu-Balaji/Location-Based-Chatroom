@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import { getChatrooms, joinChatroom } from "../api/chatromm.api";
 import { getUserLocation } from "../utlis/location";
@@ -9,7 +7,8 @@ import { MapPin, Users, Clock } from "lucide-react";
 
 function Chatrooms() {
   const [chatrooms, setChatrooms] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [joiningRoomId, setJoiningRoomId] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +26,7 @@ function Chatrooms() {
 
   const handleJoin = async (chatroomId) => {
     try {
-      setLoading(true);
+      setJoiningRoomId(chatroomId);
       const location = await getUserLocation();
 
       await joinChatroom({
@@ -42,7 +41,7 @@ function Chatrooms() {
         err?.response?.data?.message || "You are outside the chatroom radius"
       );
     } finally {
-      setLoading(false);
+      setJoiningRoomId(null);
     }
   };
 
@@ -52,7 +51,7 @@ function Chatrooms() {
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-extrabold text-gray-900 mb-8"
+        className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-8"
       >
         📍 Available Chatrooms
       </motion.h2>
@@ -98,6 +97,15 @@ function Chatrooms() {
                 <Users className="w-4 h-4 text-emerald-600" />
                 Created by: <strong>{room.createdBy.username}</strong>
               </p>
+              {room.location?.lat && room.location?.lng && (
+                <p className="flex items-center gap-2 text-xs text-slate-500">
+                  <MapPin className="w-4 h-4 text-slate-400" />
+                  <span className="font-mono">
+                    {room.location.lat.toFixed(4)},{" "}
+                    {room.location.lng.toFixed(4)}
+                  </span>
+                </p>
+              )}
 
               {room.expiresAt && (
                 <p className="flex items-center gap-2">
@@ -110,7 +118,7 @@ function Chatrooms() {
             {/* ACTION BUTTON */}
             <button
               onClick={() => handleJoin(room._id)}
-              disabled={loading || room.isExpired}
+              disabled={joiningRoomId === room._id || room.isExpired}
               className={`mt-5 w-full py-2 rounded-xl font-semibold transition
                 ${
                   room.isExpired
@@ -120,7 +128,7 @@ function Chatrooms() {
             >
               {room.isExpired
                 ? "Expired"
-                : loading
+                : joiningRoomId === room._id
                 ? "Joining..."
                 : "Join Chatroom"}
             </button>
