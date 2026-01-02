@@ -1,0 +1,25 @@
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+import cors from "cors";
+import "./config/passport.js";
+import authRoutes from "./routes/user.routes.js";
+import chatroomRoutes from "./routes/chatroom.routes.js";
+import messageRoutes from "./routes/message.routes.js";
+import errorMiddleware from "./middlewares/error.middleware.js";
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+import passport from "passport";
+
+app.use(passport.initialize());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/chatrooms", chatroomRoutes);
+app.use("/api/messages", messageRoutes);
+
+app.use(errorMiddleware);
+
+export default app;
