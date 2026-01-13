@@ -1,4 +1,4 @@
-import { chatroomModel } from "../models/chatRoom.model.js";
+import { chatroomModel } from "../models/chatroom.model.js";
 
 /**
  * CREATE CHATROOM
