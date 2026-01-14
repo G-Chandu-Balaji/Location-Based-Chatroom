@@ -1,4 +1,4 @@
-import { chatroomModel } from "../models/chatRoom.model.js";
+import { chatroomModel } from "../models/chatroom.model.js";
 import { calculateDistanceKm } from "../utils/distance.js";
 
 const locationMiddleware = async (req, res, next) => {
