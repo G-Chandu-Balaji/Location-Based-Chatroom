@@ -10,7 +10,20 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 
 const app = express();
 
-app.use(cors());
+/* ✅ FIXED CORS CONFIG */
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://location-based-chatroom-gchandubalaji.netlify.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
+
+// ✅ Handle preflight requests
+app.options("*", cors());
 app.use(express.json());
 import passport from "passport";
 

@@ -9,7 +9,14 @@ connectDB();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "https://location-based-chatroom-gchandubalaji.netlify.app",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 
 chatSocket(io);
