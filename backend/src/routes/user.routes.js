@@ -21,10 +21,11 @@ router.get(
   passport.authenticate("google", { session: false }),
   (req, res) => {
     const token = generateToken(req.user._id);
+    const frontendUrl = process.env.FRONTEND_URL;
 
     // redirect to frontend with token
     res.redirect(
-      `http://localhost:5173/oauth-success?token=${token}&username=${encodeURIComponent(
+      `${frontendUrl}/oauth-success?token=${token}&username=${encodeURIComponent(
         req.user.username
       )}`
     );

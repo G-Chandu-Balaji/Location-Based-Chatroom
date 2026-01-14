@@ -139,7 +139,9 @@ export default function Login() {
           {/* GOOGLE LOGIN */}
           <button
             onClick={() =>
-              (window.location.href = "http://localhost:5000/api/auth/google")
+              (window.location.href = `${
+                import.meta.env.VITE_API_BASE_URL
+              }/api/auth/google`)
             }
             className="w-full border py-3 rounded-xl font-medium hover:bg-gray-50 transition"
           >
